@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.shahar.biologyapp">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+
+
+    <application
+        android:allowBackup="true"
+        android:appComponentFactory="androidx"
+        android:icon="@mipmap/ic_launcher"
+        android:label="MorsGarden"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:hardwareAccelerated="false"
+        tools:replace="android:appComponentFactory">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Activity_Guest" />
+        <activity android:name=".ActivityTasks" />
+        <activity android:name=".ActivityPlantList" />
+        <activity android:name=".SignUp_Activity" />
+        <activity android:name=".Activity_Schedule"
+            android:screenOrientation="fullSensor">
+        </activity>
+
+        <service android:name=".ServiceTimer" />
+
+        <receiver
+            android:name=".ActivityPlantList$ReceiverTimer"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

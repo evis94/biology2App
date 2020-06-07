@@ -1,0 +1,72 @@
+{
+  "project_info": {
+    "project_number": "368103741748",
+    "firebase_url": "https://biologyapp-29309.firebaseio.com",
+    "project_id": "biologyapp-29309",
+    "storage_bucket": "biologyapp-29309.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:368103741748:android:018b2185d2fc7c83b8ad61",
+        "android_client_info": {
+          "package_name": "com.example.shahar.biologyapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "368103741748-2alqcda7ka46tut1lgg387ujmmjuctdm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.shahar.biologyapp",
+            "certificate_hash": "a7329dba426f307b2d13221df7f287736b93e92a"
+          }
+        },
+        {
+          "client_id": "368103741748-lvtu85ak0l5rbq46lmovtc7u89metsuq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.shahar.biologyapp",
+            "certificate_hash": "2aa23e1b4ea33682b699a134ce445186f5247987"
+          }
+        },
+        {
+          "client_id": "368103741748-tdr13e9mnmobi2pfumj00npm8m8mn8ne.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.shahar.biologyapp",
+            "certificate_hash": "df1b44f15a81c59e713d39838487949890e6c305"
+          }
+        },
+        {
+          "client_id": "368103741748-i0d33nq971buo5qjkjtlpjcp6dlt4etd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.shahar.biologyapp",
+            "certificate_hash": "bcb7c1df7cddb6f78b6dcb637330fb769ad47378"
+          }
+        },
+        {
+          "client_id": "368103741748-cfq0jn5j0kd9r5g8ablbq7ar3kcvn61n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJhJJ2dyUe-NG7UkCfXeVAjIWAbfF4HJs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "368103741748-cfq0jn5j0kd9r5g8ablbq7ar3kcvn61n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

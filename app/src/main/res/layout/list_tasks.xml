@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    tools:layout_editor_absoluteY="81dp">
+
+    <TextView
+        android:id="@+id/tvIsFinishedHeader"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="37dp"
+        android:text="האם הושלמה"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tvIsFinished"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvIsFinished" />
+
+    <TextView
+        android:id="@+id/tvIsFinished"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="107dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="18dp"
+        android:text="      "
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/btSaveTask"
+        app:layout_constraintEnd_toStartOf="@+id/tvIsFinishedHeader"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etTheTask" />
+
+    <EditText
+        android:id="@+id/etTheTask"
+        android:layout_width="328dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="83dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="31dp"
+        android:ellipsize="end"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/tvIsFinished"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btSaveTask"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="451dp"
+        android:background="@android:color/white"
+        android:text="שמירה"
+        android:textSize="24sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tvIsFinishedHeader"
+        app:layout_constraintStart_toStartOf="@+id/tvIsFinishedHeader"
+        app:layout_constraintTop_toBottomOf="@+id/tvIsFinished" />
+
+
+</android.support.constraint.ConstraintLayout>
