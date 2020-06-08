@@ -353,13 +353,16 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    PlantAdapter.remove(PlantAdapter.getItem(position));
-                    PlantAdapter.notifyDataSetChanged();
-                    arrPlants.remove(arrPlants.indexOf(PlantAdapter.getItem(position)));
+                    DatabaseReference current = FirebaseDatabase.getInstance().getReference("Plants/" + arrPlants.get(position).getKey());
+                    current.removeValue();
+                    arrPlants.remove(position);
 
-                    for (int j = arrPlants.indexOf(PlantAdapter.getItem(position)); j < plant_index_arr - 1; j++) {
+                    PlantAdapter.notifyDataSetChanged();
+
+                  /*  not sure what this supposed to do
+                   for (int j = arrPlants.indexOf(PlantAdapter.getItem(position)); j < plant_index_arr - 1; j++) {
                         arrPlants.set(j, arrPlants.get(j + 1));
-                    }
+                    }*/
                     plant_index_arr--;
 
                 }
@@ -421,21 +424,7 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
         plant_from_database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                /*
-                   plant_name = (EditText) plant_details_dialog.findViewById(R.id.etPlantName);
-        plant_name.setText("bug");
-        plant_place = (EditText) plant_details_dialog.findViewById(R.id.etPosition);
-        plant_state = (EditText) plant_details_dialog.findViewById(R.id.etPhysicalSituation);
-        plant_watering = (EditText) plant_details_dialog.findViewById(R.id.etWatering);
-        plant_type = (EditText) plant_details_dialog.findViewById(R.id.etPlantType);
-        img = (ImageButton) plant_details_dialog.findViewById(R.id.btimgDecoration);
-        img.setOnClickListener(this);
-        EditPlant = (Button) plant_details_dialog.findViewById(R.id.btEditPlant);
-        EditPlant.setOnClickListener(this);
-        save_details = (Button) plant_details_dialog.findViewById(R.id.btSavePlantDetails);
-        save_details.setOnClickListener(this);
 
-                 */
 Log.i("abc","onDataChange");
 
                 arrPlants = new ArrayList<Plant>();
