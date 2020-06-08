@@ -1,75 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    android:orientation="vertical"
-    tools:layout_editor_absoluteY="81dp">
+    android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/tvIsFinishedHeader"
+        android:id="@+id/tvIsFinishedHeaderDialog"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="37dp"
         android:text="האם הושלמה"
         android:textColor="@android:color/black"
         android:textSize="24sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tvIsFinished"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tvIsFinishedDialog"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tvIsFinished" />
+        app:layout_constraintStart_toEndOf="@+id/tvIsFinishedDialog" />
 
     <TextView
-        android:id="@+id/tvIsFinished"
+        android:id="@+id/tvIsFinishedDialog"
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:layout_marginStart="107dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="28dp"
         android:layout_marginBottom="18dp"
         android:text="      "
         android:textColor="@android:color/black"
         android:textSize="24sp"
+        android:background="@android:color/darker_gray"
         app:layout_constraintBottom_toTopOf="@+id/btSaveTask"
-        app:layout_constraintEnd_toStartOf="@+id/tvIsFinishedHeader"
+        app:layout_constraintEnd_toStartOf="@+id/tvIsFinishedHeaderDialog"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etTheTask" />
+        app:layout_constraintTop_toBottomOf="@+id/etTheTaskDialog" />
 
     <EditText
-        android:id="@+id/etTheTask"
-        android:text="test"
+        android:id="@+id/etTheTaskDialog"
         android:layout_width="328dp"
         android:layout_height="50dp"
-        android:background="@android:color/holo_orange_light"
+        android:layout_marginStart="64dp"
         android:layout_marginTop="83dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="128dp"
+        android:layout_marginEnd="64dp"
+        android:paddingStart="16dp"
         android:layout_marginBottom="31dp"
-        android:layout_marginLeft="128dp"
+        android:background="@android:color/holo_orange_light"
         android:ellipsize="end"
         android:ems="10"
         android:inputType="textPersonName"
+        android:text="test"
         android:textColor="@android:color/black"
         android:textSize="24sp"
         android:visibility="visible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/tvIsFinished"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-<!--    <Button
-        android:id="@+id/btSaveTask"
-        android:layout_width="100dp"
+    <Button
+        android:id="@+id/btSaveTaskDialog"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginBottom="451dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="52dp"
+        android:layout_marginEnd="64dp"
+
         android:background="@android:color/white"
         android:text="שמירה"
         android:textSize="24sp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tvIsFinishedHeader"
-        app:layout_constraintStart_toStartOf="@+id/tvIsFinishedHeader"
-        app:layout_constraintTop_toBottomOf="@+id/tvIsFinished" />-->
 
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvIsFinishedDialog" />
 </android.support.constraint.ConstraintLayout>
+
+    <!--        android:visibility="invisible"-->

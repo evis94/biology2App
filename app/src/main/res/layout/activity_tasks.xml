@@ -7,7 +7,7 @@
     android:background="@color/colorPrimary"
     tools:context=".ActivityTasks">
 
-    <LinearLayout
+<!--    <LinearLayout
         android:id="@+id/lLay2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,7 +19,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent">-->
 
         <Button
             android:id="@+id/btAddTask"
@@ -28,14 +28,24 @@
             android:background="@android:color/white"
             android:text="הוספת משימה"
             android:textColor="@android:color/black"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            />
 
         <ListView
             android:id="@+id/lvTasksList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:focusable="false"
-            android:focusableInTouchMode="true" />
+            android:focusableInTouchMode="true"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toTopOf="@id/btAddTask"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-    </LinearLayout>
+<!--    </LinearLayout>-->
 </android.support.constraint.ConstraintLayout>
