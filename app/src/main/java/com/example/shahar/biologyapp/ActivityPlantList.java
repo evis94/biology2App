@@ -368,7 +368,7 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
             builder.setNeutralButton("view the plant's information", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    RetrieveData(position);
+                    retrieveData(position);
                     plant_details_dialog.show();
                 }
             });
@@ -416,7 +416,7 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
 
     }
 
-    private void RetrieveData(final int position) {
+    private void retrieveData(final int position) {
 
         //the reference to the Task table- plant_from_database
         plant_from_database.addValueEventListener(new ValueEventListener() {
@@ -492,7 +492,7 @@ Log.i("abc","onDataChange");
         @Override
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("broadcastMessage");
-            plant_message.setText("");
+          //  plant_message.setText("");
             if (saveFlag == false)
                 plant_message.setText(plant_message.getText() + "\n" + message);
             else {

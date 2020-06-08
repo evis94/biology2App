@@ -6,37 +6,54 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 /**
- * @author  Shahar Chen
+ * @author Shahar Chen
  * @version 1.0
  */
 public class Plant {
 
-    /** The  plant's name */
+    /**
+     * The  plant's name
+     */
     private String name;
-    /** The  plant's position in the garden */
+    /**
+     * The  plant's position in the garden
+     */
     private String position;
-    /** The  plant's watering needs */
+    /**
+     * The  plant's watering needs
+     */
     private String watering;
-    /** The  plant's type */
+    /**
+     * The  plant's type
+     */
     private String type;
-    /** The  plant's physical state */
+    /**
+     * The  plant's physical state
+     */
     private String state;
-    /** Pic number*/
+    /**
+     * Pic number
+     */
     private int picNum;
-    /** The object's key */
+    /**
+     * The object's key
+     */
     private String key;
-    /**The time that passed since creation*/
+    /**
+     * The time that passed since creation
+     */
     private String remind;
 
     /**
      * This is the constructor.
      * The plant's pic will be added after the creation of the item
-     * @param name This is the name of the plant
+     *
+     * @param name     This is the name of the plant
      * @param position This is the position of the plant in the garden
      * @param watering This is how much water the plant needs
-     * @param type This is what type of plant it is
-     * @param state This is the physical state of the plant
-     * @param key This is the key for the Firebase
+     * @param type     This is what type of plant it is
+     * @param state    This is the physical state of the plant
+     * @param key      This is the key for the Firebase
      * @return an object
      */
     public Plant(String name, String position, String watering, String type, String state, String key) {
@@ -46,8 +63,8 @@ public class Plant {
         this.watering = watering;
         this.type = type;
         this.state = state;
-        this.key=key;
-        this.remind="";
+        this.key = key;
+        this.remind = "Hours since last edit:0";
         // set image as wheat
         this.picNum = 0;
     }
@@ -58,6 +75,7 @@ public class Plant {
 
     /**
      * getter
+     *
      * @return the name of the plant
      */
     public String getName() {
@@ -67,6 +85,7 @@ public class Plant {
     /**
      * setter
      * sets the name of the plant
+     *
      * @return nothing
      */
     public void setName(String name) {
@@ -75,6 +94,7 @@ public class Plant {
 
     /**
      * getter
+     *
      * @return the position of the plant
      */
     public String getPosition() {
@@ -84,6 +104,7 @@ public class Plant {
     /**
      * setter
      * sets the position of the plant
+     *
      * @return nothing
      */
     public void setPosition(String position) {
@@ -92,6 +113,7 @@ public class Plant {
 
     /**
      * getter
+     *
      * @return the watering needs of the plant
      */
     public String getWatering() {
@@ -101,6 +123,7 @@ public class Plant {
     /**
      * setter
      * sets the watering needs of the plant
+     *
      * @return nothing
      */
     public void setWatering(String watering) {
@@ -109,6 +132,7 @@ public class Plant {
 
     /**
      * getter
+     *
      * @return the type of the plant
      */
     public String getType() {
@@ -118,6 +142,7 @@ public class Plant {
     /**
      * setter
      * sets the type of the plant
+     *
      * @return nothing
      */
     public void setType(String type) {
@@ -126,6 +151,7 @@ public class Plant {
 
     /**
      * getter
+     *
      * @return the physical state of the plant
      */
     public String getState() {
@@ -135,6 +161,7 @@ public class Plant {
     /**
      * setter
      * sets the physical state of the plant
+     *
      * @return nothing
      */
     public void setState(String state) {
@@ -143,6 +170,7 @@ public class Plant {
 
     /**
      * getter
+     *
      * @return the key of the object
      */
     public String getKey() {
@@ -152,6 +180,7 @@ public class Plant {
     /**
      * setter
      * sets the key of the object
+     *
      * @return nothing
      */
     public void setKey(String key) {
@@ -160,21 +189,21 @@ public class Plant {
 
     /**
      * getter
+     *
      * @return the time that passed since creation
      */
-    public String getRemind()
-    {
+    public String getRemind() {
         return this.remind;
     }
 
     /**
      * setter
      * sets the key of the object
+     *
      * @return nothing
      */
-    public void setRemind(String timeSinceCreation)
-    {
-        this.remind=timeSinceCreation;
+    public void setRemind(String timeSinceCreation) {
+        this.remind = timeSinceCreation;
     }
 
     @Override
