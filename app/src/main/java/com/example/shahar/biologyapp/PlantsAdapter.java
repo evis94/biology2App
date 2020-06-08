@@ -67,7 +67,7 @@ public class PlantsAdapter extends ArrayAdapter<Plant> {
         Plant plant_obj = objects.get(position);
 
         pic.setImageBitmap(images.get(plant_obj.getPicNum()));
-        nameOfPlant.setText(String.valueOf(plant_obj.getName()));
+        nameOfPlant.setText(plant_obj.getName());
         return view;
     }
 

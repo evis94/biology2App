@@ -133,7 +133,6 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
         plant_details_dialog.setCancelable(true);
 
         plant_name = (EditText) plant_details_dialog.findViewById(R.id.etPlantName);
-        plant_name.setText("bug");
         plant_place = (EditText) plant_details_dialog.findViewById(R.id.etPosition);
         plant_state = (EditText) plant_details_dialog.findViewById(R.id.etPhysicalSituation);
         plant_watering = (EditText) plant_details_dialog.findViewById(R.id.etWatering);
