@@ -151,6 +151,7 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
             EditPlant.setEnabled(true);
 
 
+        setReceiver();
 
 
 
@@ -420,7 +421,7 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
 
     @Override
     protected void onStart() {
-        setReceiver();
+//        setReceiver();
         super.onStart();
     }
 
