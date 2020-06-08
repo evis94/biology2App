@@ -34,7 +34,7 @@
         <activity android:name=".ActivityPlantList" />
         <activity android:name=".SignUp_Activity" />
         <activity android:name=".Activity_Schedule"
-            android:screenOrientation="fullSensor">
+            android:screenOrientation="sensorLandscape">
         </activity>
 
         <service android:name=".ServiceTimer" />
