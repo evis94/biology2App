@@ -1,7 +1,6 @@
 package com.example.shahar.biologyapp;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,13 +11,11 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -26,29 +23,22 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
@@ -61,7 +51,6 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
 
     ListView list_plants;
     PlantsAdapter PlantAdapter; //adapter
-    ArrayList<Plants> arrPlants= new ArrayList<>();
     static int plant_index_arr=0;
     Button add;
     public static final int GET_FROM_GALLERY=1;
@@ -73,11 +62,7 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
     Button EditPlant, save_details;
     ImageButton img;
 
-    Plants plant_details;
-    FirebaseDatabase database;
-    DatabaseReference plant_Ref;
-
-    DatabaseReference plant_from_database;
+    DatabaseReference plantsDbRef;
 
     TextView plant_message;
 
@@ -89,7 +74,8 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
     SharedPreferences sp1;
 
     boolean allowed_inPlants=false;
-
+    private ArrayList<Plant> arrPlants;
+    private Plant plant_details;
 
 
     @Override
@@ -111,11 +97,13 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
 
         sp1=getSharedPreferences("time",0);
 
+        plantsDbRef =FirebaseDatabase.getInstance().getReference("Plants");
 
-        database = FirebaseDatabase.getInstance();
-        plant_from_database=FirebaseDatabase.getInstance().getReference("Plants");
-        RetrieveData();
-        PlantAdapter =new PlantsAdapter(this,0,0,arrPlants);
+        list_plants=(ListView)findViewById(R.id.lvList);
+        list_plants.setOnItemLongClickListener(this);
+
+//        initializeDataFromDB();
+        addChildEventListener();
 
       //service stuff
         sp1=getSharedPreferences("time",0);
@@ -153,9 +141,7 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
 
         //end dialog
 
-        list_plants=(ListView)findViewById(R.id.lvList);
-        list_plants.setAdapter(PlantAdapter);
-        list_plants.setOnItemLongClickListener(this);
+
 
 
 
@@ -169,6 +155,76 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
 
 
     }
+
+    private void addChildEventListener() {
+
+        plantsDbRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Plant plant = dataSnapshot.getValue(Plant.class);
+                if (PlantAdapter == null){
+                    arrPlants = new ArrayList<>();
+                    PlantAdapter = new PlantsAdapter(ActivityPlantList.this,0,0,arrPlants);
+                    list_plants.setAdapter(PlantAdapter);
+                }
+                PlantAdapter.add(plant);
+                PlantAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                Plant plant = dataSnapshot.getValue(Plant.class);
+                PlantAdapter.remove(plant);
+                PlantAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void initializeDataFromDB() {
+
+
+        arrPlants = new ArrayList<>();
+        plantsDbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot ds: dataSnapshot.getChildren()){
+                    Plant p = ds.getValue(Plant.class);
+                    arrPlants.add(p);
+                }
+
+                if (PlantAdapter == null){
+                    PlantAdapter = new PlantsAdapter(ActivityPlantList.this,0,0,arrPlants);
+                    list_plants.setAdapter(PlantAdapter);
+                }else{
+                    PlantAdapter.setPlants(arrPlants);
+                    PlantAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     /**
      * This method takes a picture or pulls one from the user's phone's gallery using two other methods that it calls
@@ -329,35 +385,6 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
         return false;
     }
 
-    /**
-     * retrieves the schedule data from the Firebase database and updates the info in the array
-     */
-    public void RetrieveData()
-    {
-        //the reference to the Task table- plant_from_database
-        plant_from_database.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                arrPlants = new ArrayList<Plants>();
-                for(DataSnapshot data : dataSnapshot.getChildren())
-                {
-                    Plants p = data.getValue(Plants.class);
-                    arrPlants.add(p);
-
-                }
-                PlantAdapter= new PlantsAdapter(ActivityPlantList.this,0,0,arrPlants);
-                list_plants.setAdapter(PlantAdapter);
-                PlantAdapter.notifyDataSetChanged();
-                plant_index_arr++;
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
 
     /**
      * This is a private a method that is only used by the application
@@ -450,21 +477,12 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
         {
 
             if(allowed_inPlants==true) {
-                plant_details_dialog.show();
-                plant_details = new Plants(plant_name.toString(), plant_place.toString(), plant_watering.toString(), plant_type.toString(), plant_state.toString(), "", "");
-                plant_details.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                plant_Ref = database.getReference("Plants").push();
-                plant_details.setKey(plant_Ref.getKey());
-                plant_Ref.setValue(plant_details);
-                AddPic();
-                PlantAdapter.add(plant_details);
-                PlantAdapter.notifyDataSetChanged();
-                plant_index_arr++;
-                plant_message.setText("Hours since the last edit: 0");
-                RetrieveData();
+               addPlantToDB();
+//                AddPic();
             }
-            else
+            else{
                 OpenDialog();
+            }
         }
 
 
@@ -492,7 +510,8 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
                 plant_state=(EditText)plant_details_dialog.findViewById(R.id.etPhysicalSituation);
                 plant_watering=(EditText)plant_details_dialog.findViewById(R.id.etWatering);
                 plant_type=(EditText)plant_details_dialog.findViewById(R.id.etPlantType);
-                RetrieveData();
+
+//                RetrieveData();
 
 
             }
@@ -526,4 +545,37 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
         }
 
     }
+
+
+    /*********************************************************************************************/
+
+    private void addPlantToDB(){
+
+        plant_details_dialog.show();
+
+        Plant plant = new Plant(plant_name.getText().toString(),
+                plant_place.getText().toString(),
+                plant_watering.getText().toString(),
+                plant_type.getText().toString(),
+                plant_state.getText().toString(),
+                "");
+
+        clearPlantdetailsDialogEditTextValues();
+
+        String key = plantsDbRef.push().getKey();
+        plant.setKey(key);
+
+        plantsDbRef.child(key).setValue(plant);
+    }
+
+    private void clearPlantdetailsDialogEditTextValues() {
+
+        plant_name.setText("");
+        plant_place.setText("");
+        plant_watering.setText("");
+        plant_type.setText("");
+        plant_state.setText("");
+    }
+
+
 }

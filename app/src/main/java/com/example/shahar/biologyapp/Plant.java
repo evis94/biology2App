@@ -9,7 +9,7 @@ import android.widget.ImageButton;
  * @author  Shahar Chen
  * @version 1.0
  */
-public class Plants {
+public class Plant {
 
     /** The  plant's name */
     private String name;
@@ -21,32 +21,12 @@ public class Plants {
     private String type;
     /** The  plant's physical state */
     private String state;
-    /** The  plant's picture */
-    private Bitmap pic;
-    /** The object's uid */
-    private String uid;
+    /** Pic number*/
+    private int picNum;
     /** The object's key */
     private String key;
     /**The time that passed since creation*/
     private String remind;
-
-    /**
-     * This is the constructor.
-     * @param name This is the name of the plant
-     * @param pic This is a picture of the plant
-     * @return an object
-     */
-    public Plants(String name, Bitmap pic) {
-        this.name = name;
-        this.pic = pic;
-        this.position = "";
-        this.watering = "";
-        this.type = "";
-        this.state ="";
-        this.uid="";
-        this.key="";
-        this.remind="";
-    }
 
     /**
      * This is the constructor.
@@ -56,39 +36,25 @@ public class Plants {
      * @param watering This is how much water the plant needs
      * @param type This is what type of plant it is
      * @param state This is the physical state of the plant
-     * @param uid This is the uid for the Firebase
      * @param key This is the key for the Firebase
      * @return an object
      */
-    public Plants(String name, String position, String watering, String type, String state, String uid, String key) {
+    public Plant(String name, String position, String watering, String type, String state, String key) {
         //the plant's pic will be added after the creation of the item
         this.name = name;
         this.position = position;
         this.watering = watering;
         this.type = type;
         this.state = state;
-        this.uid=uid;
         this.key=key;
-        this.pic= null;
         this.remind="";
+        // set image as wheat
+        this.picNum = 0;
     }
 
-    /**
-     * This is the constructor.
-     * @return an empty object
-     */
-    public Plants()
-    {
-        this.name = "";
-        this.position = "";
-        this.watering = "";
-        this.type = "";
-        this.state ="";
-        this.uid="";
-        this.key="";
-        this.remind="";
-    }
+    public Plant() {
 
+    }
 
     /**
      * getter
@@ -105,23 +71,6 @@ public class Plants {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * getter
-     * @return the picture of the plant
-     */
-    public Bitmap getPic() {
-        return pic;
-    }
-
-    /**
-     * setter
-     * sets the picture of the plant
-     * @return nothing
-     */
-    public void setPic(Bitmap pic) {
-        this.pic = pic;
     }
 
     /**
@@ -194,23 +143,6 @@ public class Plants {
 
     /**
      * getter
-     * @return the uid of the object
-     */
-    public String getUid() {
-        return uid;
-    }
-
-    /**
-     * setter
-     * sets the uid of the object
-     * @return nothing
-     */
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    /**
-     * getter
      * @return the key of the object
      */
     public String getKey() {
@@ -245,21 +177,25 @@ public class Plants {
         this.remind=timeSinceCreation;
     }
 
-    /**
-     * This method describes the object
-     * @return a sentence that describes the object
-     */
     @Override
     public String toString() {
-        return "Plants{" +
+        return "Plant{" +
                 "name='" + name + '\'' +
                 ", position='" + position + '\'' +
                 ", watering='" + watering + '\'' +
                 ", type='" + type + '\'' +
                 ", state='" + state + '\'' +
-                ", pic=" + pic +
-                ", uid='" + uid + '\'' +
+                ", picNum=" + picNum +
                 ", key='" + key + '\'' +
+                ", remind='" + remind + '\'' +
                 '}';
+    }
+
+    public int getPicNum() {
+        return picNum;
+    }
+
+    public void setPicNum(int picNum) {
+        this.picNum = picNum;
     }
 }
