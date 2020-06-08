@@ -44,36 +44,40 @@ import java.util.ArrayList;
 /**
  * This Activity manages the plants information
  * The data is saved using Firebase real time database
- * @author  Shahar Chen
+ *
+ * @author Shahar Chen
  * @version 1.0
  */
 public class ActivityPlantList extends AppCompatActivity implements AdapterView.OnItemLongClickListener, View.OnClickListener {
 
     ListView list_plants;
     PlantsAdapter PlantAdapter; //adapter
-    static int plant_index_arr=0;
+    static int plant_index_arr = 0;
     Button add;
-    public static final int GET_FROM_GALLERY=1;
+    public static final int GET_FROM_GALLERY = 1;
     private static int RESULT_LOAD_IMAGE = 1;
-    final int MY_CAMERA_REQUEST_CODE=1;
+    final int MY_CAMERA_REQUEST_CODE = 1;
 
     Dialog plant_details_dialog;
-    EditText plant_name,plant_place,plant_watering,plant_type, plant_state;
+    EditText plant_name, plant_place, plant_watering, plant_type, plant_state;
     Button EditPlant, save_details;
     ImageButton img;
 
     DatabaseReference plantsDbRef;
+
+    DatabaseReference plant_from_database;
+
 
     TextView plant_message;
 
     //Service stuff
     ReceiverTimer myReceiver;
     public static final String FILTER_ACTION_KEY = "any_key";
-    int hourCount=0;
-    boolean saveFlag=false;
+    int hourCount = 0;
+    boolean saveFlag = false;
     SharedPreferences sp1;
 
-    boolean allowed_inPlants=false;
+    boolean allowed_inPlants = false;
     private ArrayList<Plant> arrPlants;
     private Plant plant_details;
 
@@ -83,76 +87,74 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plant_list);
 
+        plant_from_database = FirebaseDatabase.getInstance().getReference("Plants");
+
         /** pulls the information of if the user is a manager from the intent*/
-        Bundle data= getIntent().getExtras();
-        if(data!=null)
-            allowed_inPlants=data.getBoolean("allowed");
+        Bundle data = getIntent().getExtras();
+        if (data != null)
+            allowed_inPlants = data.getBoolean("allowed");
 
 
-
-        View fromPlantList = getLayoutInflater().inflate(R.layout.listplants,null);
-        plant_message=(TextView)fromPlantList.findViewById(R.id.tvPlantReminder);
+        View fromPlantList = getLayoutInflater().inflate(R.layout.listplants, null);
+        plant_message = (TextView) fromPlantList.findViewById(R.id.tvPlantReminder);
 
         Log.d("--------------", "got to plant list activity");
 
-        sp1=getSharedPreferences("time",0);
+        sp1 = getSharedPreferences("time", 0);
 
-        plantsDbRef =FirebaseDatabase.getInstance().getReference("Plants");
+        plantsDbRef = FirebaseDatabase.getInstance().getReference("Plants");
 
-        list_plants=(ListView)findViewById(R.id.lvList);
+        list_plants = (ListView) findViewById(R.id.lvList);
         list_plants.setOnItemLongClickListener(this);
 
 //        initializeDataFromDB();
         addChildEventListener();
 
-      //service stuff
-        sp1=getSharedPreferences("time",0);
-        SharedPreferences.Editor editor=sp1.edit();
-        editor.putInt("count",hourCount);
+        //service stuff
+        sp1 = getSharedPreferences("time", 0);
+        SharedPreferences.Editor editor = sp1.edit();
+        editor.putInt("count", hourCount);
         editor.commit();
 
-        if(plant_index_arr!=0) {
+        if (plant_index_arr != 0) {
             Intent intent = new Intent(this, ServiceTimer.class);
             int send = sp1.getInt("count", 0);
             intent.putExtra("count", send);
             startService(intent);
         }
 
-        add=(Button)findViewById(R.id.btAddPlantToList);
+        add = (Button) findViewById(R.id.btAddPlantToList);
         add.setOnClickListener(this);
 
         //start dialog
-        plant_details_dialog= new Dialog(this);
+        plant_details_dialog = new Dialog(this);
         plant_details_dialog.setContentView(R.layout.single_plant_page);
         plant_details_dialog.setTitle("The plant's details");
         plant_details_dialog.setCancelable(true);
 
-        plant_name=(EditText)plant_details_dialog.findViewById(R.id.etPlantName);
-        plant_place=(EditText)plant_details_dialog.findViewById(R.id.etPosition);
-        plant_state=(EditText)plant_details_dialog.findViewById(R.id.etPhysicalSituation);
-        plant_watering=(EditText)plant_details_dialog.findViewById(R.id.etWatering);
-        plant_type=(EditText)plant_details_dialog.findViewById(R.id.etPlantType);
-        img=(ImageButton)plant_details_dialog.findViewById(R.id.btimgDecoration);
+        plant_name = (EditText) plant_details_dialog.findViewById(R.id.etPlantName);
+        plant_name.setText("bug");
+        plant_place = (EditText) plant_details_dialog.findViewById(R.id.etPosition);
+        plant_state = (EditText) plant_details_dialog.findViewById(R.id.etPhysicalSituation);
+        plant_watering = (EditText) plant_details_dialog.findViewById(R.id.etWatering);
+        plant_type = (EditText) plant_details_dialog.findViewById(R.id.etPlantType);
+        img = (ImageButton) plant_details_dialog.findViewById(R.id.btimgDecoration);
         img.setOnClickListener(this);
-        EditPlant=(Button)plant_details_dialog.findViewById(R.id.btEditPlant);
+        EditPlant = (Button) plant_details_dialog.findViewById(R.id.btEditPlant);
         EditPlant.setOnClickListener(this);
-        save_details=(Button)plant_details_dialog.findViewById(R.id.btSavePlantDetails);
+        save_details = (Button) plant_details_dialog.findViewById(R.id.btSavePlantDetails);
         save_details.setOnClickListener(this);
 
         //end dialog
 
 
-
-
-
-        if(allowed_inPlants==false)
+        if (allowed_inPlants == false)
             EditPlant.setEnabled(false);
         else
             EditPlant.setEnabled(true);
 
 
         setReceiver();
-
 
 
     }
@@ -163,9 +165,9 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Plant plant = dataSnapshot.getValue(Plant.class);
-                if (PlantAdapter == null){
+                if (PlantAdapter == null) {
                     arrPlants = new ArrayList<>();
-                    PlantAdapter = new PlantsAdapter(ActivityPlantList.this,0,0,arrPlants);
+                    PlantAdapter = new PlantsAdapter(ActivityPlantList.this, 0, 0, arrPlants);
                     list_plants.setAdapter(PlantAdapter);
                 }
                 PlantAdapter.add(plant);
@@ -205,15 +207,15 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                for(DataSnapshot ds: dataSnapshot.getChildren()){
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Plant p = ds.getValue(Plant.class);
                     arrPlants.add(p);
                 }
 
-                if (PlantAdapter == null){
-                    PlantAdapter = new PlantsAdapter(ActivityPlantList.this,0,0,arrPlants);
+                if (PlantAdapter == null) {
+                    PlantAdapter = new PlantsAdapter(ActivityPlantList.this, 0, 0, arrPlants);
                     list_plants.setAdapter(PlantAdapter);
-                }else{
+                } else {
                     PlantAdapter.setPlants(arrPlants);
                     PlantAdapter.notifyDataSetChanged();
                 }
@@ -230,32 +232,29 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
     /**
      * This method takes a picture or pulls one from the user's phone's gallery using two other methods that it calls
      */
-    public void AddPic()
-    {
+    public void AddPic() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Where would you like to take the picture from?");
         builder.setCancelable(true);
         builder.setNegativeButton("Take a picture now", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
-                {
-                    String [] permission = {Manifest.permission.CAMERA};
-                    ActivityCompat.requestPermissions(getParent(),permission,MY_CAMERA_REQUEST_CODE);
-                }
-                else {
+                if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    String[] permission = {Manifest.permission.CAMERA};
+                    ActivityCompat.requestPermissions(getParent(), permission, MY_CAMERA_REQUEST_CODE);
+                } else {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(intent,0);
+                    startActivityForResult(intent, 0);
                 }
             }
-            });
+        });
 
         builder.setPositiveButton("From my gallery", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //Intent in = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 //startActivityForResult(in, RESULT_LOAD_IMAGE);
-                startActivityForResult(new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI),GET_FROM_GALLERY);
+                startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_FROM_GALLERY);
             }
         });
     }
@@ -263,8 +262,7 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
     /**
      * This method displays an alert message to the user
      */
-    public void OpenDialog()
-    {
+    public void OpenDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Sign in as manager to access this function");
         builder.setCancelable(true);
@@ -279,6 +277,7 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
 
     /**
      * This method pulls a picture from the user's phone's gallery
+     *
      * @param requestCode
      * @param resultCode
      * @param data
@@ -294,13 +293,13 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
         }
         if ((requestCode == RESULT_LOAD_IMAGE) && (resultCode == RESULT_OK && null != data)) {
             Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
             Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
             cursor.moveToFirst();
 
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String  picPath = cursor.getString(columnIndex); //contains the path of selected Image
+            String picPath = cursor.getString(columnIndex); //contains the path of selected Image
             cursor.close();
             img.setImageDrawable(Drawable.createFromPath(picPath));
         }
@@ -308,6 +307,7 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
 
     /**
      * This method takes a picture
+     *
      * @param requestCode
      * @param permissions
      * @param grantResults
@@ -319,17 +319,19 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent,0);
+                startActivityForResult(intent, 0);
 
             } else {
                 Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
             }
-        }}
+        }
+    }
 
     /**
      * This method gives a manager user the option to delete or edit the plant's information
      * If the user id not a manager an alert message will be displayed to the user
      * This method also opens a dialog with the plant's information
+     *
      * @param parent
      * @param view
      * @param position
@@ -340,8 +342,7 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
     public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
 
-        if(allowed_inPlants==true)
-        {
+        if (allowed_inPlants == true) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Are you sure you want to delete the plant's information?");
             builder.setCancelable(true);
@@ -357,9 +358,8 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
                     PlantAdapter.notifyDataSetChanged();
                     arrPlants.remove(arrPlants.indexOf(PlantAdapter.getItem(position)));
 
-                    for (int j=arrPlants.indexOf(PlantAdapter.getItem(position)); j<plant_index_arr-1;j++)
-                    {
-                        arrPlants.set(j,arrPlants.get(j+1));
+                    for (int j = arrPlants.indexOf(PlantAdapter.getItem(position)); j < plant_index_arr - 1; j++) {
+                        arrPlants.set(j, arrPlants.get(j + 1));
                     }
                     plant_index_arr--;
 
@@ -368,18 +368,17 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
             builder.setNeutralButton("view the plant's information", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    RetrieveData(position);
                     plant_details_dialog.show();
                 }
             });
 
             AlertDialog dialog = builder.create();
             dialog.show();
-            hourCount=0;
+            hourCount = 0;
 
-        }
-        else
-        {
-           OpenDialog();
+        } else {
+            OpenDialog();
             plant_details_dialog.show();
         }
 
@@ -391,18 +390,16 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
      * This is a private a method that is only used by the application
      * The methods uses a service to time how many hours has passed which is saved using SharePreference
      */
-    private void TimeIt()
-    {
+    private void TimeIt() {
         Intent intent = new Intent(this, ServiceTimer.class);
-        int send= sp1.getInt("count",0);
-        Log.d("--- time it 's send",String.valueOf(send));
-        intent.putExtra("count",send);
-        if(saveFlag==true) {
+        int send = sp1.getInt("count", 0);
+        Log.d("--- time it 's send", String.valueOf(send));
+        intent.putExtra("count", send);
+        if (saveFlag == true) {
             intent.putExtra("flag", true);
-            Log.d("-------","save flag is true");
-        }
-        else
-            intent.putExtra("flag",false);
+            Log.d("-------", "save flag is true");
+        } else
+            intent.putExtra("flag", false);
         startService(intent);
 
     }
@@ -419,6 +416,56 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
 
     }
 
+    private void RetrieveData(final int position) {
+
+        //the reference to the Task table- plant_from_database
+        plant_from_database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                /*
+                   plant_name = (EditText) plant_details_dialog.findViewById(R.id.etPlantName);
+        plant_name.setText("bug");
+        plant_place = (EditText) plant_details_dialog.findViewById(R.id.etPosition);
+        plant_state = (EditText) plant_details_dialog.findViewById(R.id.etPhysicalSituation);
+        plant_watering = (EditText) plant_details_dialog.findViewById(R.id.etWatering);
+        plant_type = (EditText) plant_details_dialog.findViewById(R.id.etPlantType);
+        img = (ImageButton) plant_details_dialog.findViewById(R.id.btimgDecoration);
+        img.setOnClickListener(this);
+        EditPlant = (Button) plant_details_dialog.findViewById(R.id.btEditPlant);
+        EditPlant.setOnClickListener(this);
+        save_details = (Button) plant_details_dialog.findViewById(R.id.btSavePlantDetails);
+        save_details.setOnClickListener(this);
+
+                 */
+Log.i("abc","onDataChange");
+
+                arrPlants = new ArrayList<Plant>();
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    Plant p = data.getValue(Plant.class);
+                    arrPlants.add(p);
+
+                }
+                Plant plant = arrPlants.get(position);
+                plant_name.setText(plant.getName());
+                plant_place.setText(plant.getPosition());
+                plant_state.setText(plant.getState());
+                plant_watering.setText(plant.getWatering());
+                plant_type.setText(plant.getType());
+
+             /*   PlantAdapter = new PlantsAdapter(ActivityPlantList.this, 0, 0, arrPlants);
+                list_plants.setAdapter(PlantAdapter);
+                PlantAdapter.notifyDataSetChanged();
+                plant_index_arr++;*/
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("abc", "cancelled");
+            }
+        });
+    }
+
+
     @Override
     protected void onStart() {
 //        setReceiver();
@@ -432,12 +479,13 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
     }
 
     /**
-     * @author  Shahar Chen
+     * @author Shahar Chen
      * @version 1.0
      */
     public class ReceiverTimer extends BroadcastReceiver {
         /**
          * This method uses broadcast receiver to update how many hours past since the last time the information was edited
+         *
          * @param context
          * @param intent
          */
@@ -445,26 +493,25 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("broadcastMessage");
             plant_message.setText("");
-            if (saveFlag==false)
+            if (saveFlag == false)
                 plant_message.setText(plant_message.getText() + "\n" + message);
             else {
                 stopService(intent);
-                plant_message.setText( "Hours that past since the last edit: 0" );
-                saveFlag=false;
+                plant_message.setText("Hours that past since the last edit: 0");
+                saveFlag = false;
             }
 
 
-            int send= sp1.getInt("count",0);
+            int send = sp1.getInt("count", 0);
             plant_details.setRemind(String.valueOf(send));
-            Log.d("-----inside class send",String.valueOf(sp1.getInt("count",0)));
+            Log.d("-----inside class send", String.valueOf(sp1.getInt("count", 0)));
             SharedPreferences.Editor editor = sp1.edit();
-            editor.putInt("count",send+1);
+            editor.putInt("count", send + 1);
             editor.commit();
             TimeIt();
 
         }
     }
-
 
 
     @Override
@@ -474,72 +521,53 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
          * Creates a new plant object and adds it to the listview if the user is a manager
          * If the user is not a manager an alert message will be displayed
          */
-        if(view.getId()==add.getId())
-        {
+        if (view.getId() == add.getId()) {
 
-            if(allowed_inPlants==true) {
+            if (allowed_inPlants == true) {
                 plant_details_dialog.show();
-            }
-            else{
+            } else {
                 OpenDialog();
             }
-        }
-
-
-        else if (view.getId()==EditPlant.getId())
-        {
+        } else if (view.getId() == EditPlant.getId()) {
             /**
              * opens the plant's information to editing and updates its data if the user is a manager
              * If the user is not a manager an alert message will be displayed
              */
-            if(allowed_inPlants==true)
-            {
-                SharedPreferences.Editor editor=sp1.edit();
-                editor.putInt("count",0);
-                saveFlag=true;
+            if (allowed_inPlants == true) {
+                SharedPreferences.Editor editor = sp1.edit();
+                editor.putInt("count", 0);
+                saveFlag = true;
                 editor.commit();
-                plant_message.setText( "Hours since the last edit: 0" );
+                plant_message.setText("Hours since the last edit: 0");
 
                 plant_name.setEnabled(true);
                 plant_place.setEnabled(true);
                 plant_state.setEnabled(true);
                 plant_watering.setEnabled(true);
                 plant_type.setEnabled(true);
-                plant_name=(EditText)plant_details_dialog.findViewById(R.id.etPlantName);
-                plant_place=(EditText)plant_details_dialog.findViewById(R.id.etPosition);
-                plant_state=(EditText)plant_details_dialog.findViewById(R.id.etPhysicalSituation);
-                plant_watering=(EditText)plant_details_dialog.findViewById(R.id.etWatering);
-                plant_type=(EditText)plant_details_dialog.findViewById(R.id.etPlantType);
-
-//                RetrieveData();
+                plant_name = (EditText) plant_details_dialog.findViewById(R.id.etPlantName);
+                plant_place = (EditText) plant_details_dialog.findViewById(R.id.etPosition);
+                plant_state = (EditText) plant_details_dialog.findViewById(R.id.etPhysicalSituation);
+                plant_watering = (EditText) plant_details_dialog.findViewById(R.id.etWatering);
+                plant_type = (EditText) plant_details_dialog.findViewById(R.id.etPlantType);
 
 
-            }
-            else
-            {
+            } else {
                 OpenDialog();
             }
-        }
-
-        else if(view.getId()==img.getId())
-        {
+        } else if (view.getId() == img.getId()) {
             /**
              * adds a picture to the plant if the user is a manager
              * If the user is not a manager an alert message will be displayed
              */
-            if(allowed_inPlants==true)
-            {
-               AddPic();
-            }
-            else
-            {
-               OpenDialog();
+            if (allowed_inPlants == true) {
+                AddPic();
+            } else {
+                OpenDialog();
 
             }
 
-        }
-        else if (view.getId()==save_details.getId())
-        {
+        } else if (view.getId() == save_details.getId()) {
             addPlantToDB();
             plant_details_dialog.dismiss();
 
@@ -550,7 +578,7 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
 
     /*********************************************************************************************/
 
-    private void addPlantToDB(){
+    private void addPlantToDB() {
 
         Plant plant = new Plant(plant_name.getText().toString(),
                 plant_place.getText().toString(),
