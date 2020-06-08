@@ -477,8 +477,7 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
         {
 
             if(allowed_inPlants==true) {
-               addPlantToDB();
-//                AddPic();
+                plant_details_dialog.show();
             }
             else{
                 OpenDialog();
@@ -540,6 +539,7 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
         }
         else if (view.getId()==save_details.getId())
         {
+            addPlantToDB();
             plant_details_dialog.dismiss();
 
         }
@@ -550,8 +550,6 @@ public class ActivityPlantList extends AppCompatActivity implements AdapterView.
     /*********************************************************************************************/
 
     private void addPlantToDB(){
-
-        plant_details_dialog.show();
 
         Plant plant = new Plant(plant_name.getText().toString(),
                 plant_place.getText().toString(),
